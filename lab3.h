@@ -21,6 +21,7 @@ typedef struct {
 */
 int is_board_valid();
 
+
 /** 
  * Reads in the sudoku board into a 2-dimensional array
  * and returns a reference to the array.
