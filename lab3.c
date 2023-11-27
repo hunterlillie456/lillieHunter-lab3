@@ -34,14 +34,17 @@ int** read_board_from_file(char* filename){
     return board;
 }
 
+// validates grids
 int validate_grid(){
 
 }
 
+//validates columns
 int validate_col(){
 
 }
 
+//validates rows
 int validate_row(){
 
 }
