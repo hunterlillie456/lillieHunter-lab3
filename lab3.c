@@ -36,23 +36,22 @@ int** read_board_from_file(char* filename){
 
 // validates grid
 int validate_grid(){
-    
     // Test #1 Variable
-    int sum = 0;
+        int sum = 0;
     
-    // Test #2 Variables
-  	int one = 0;
-  	int two = 0;
-  	int three = 0;
-    int four = 0;
-    int five = 0;
-    int six = 0;
-    int seven = 0;
-    int eight = 0;
-    int nine = 0;
-
+        // Test #2 Variables
+  	    int one = 0;
+  	    int two = 0;
+  	    int three = 0;
+        int four = 0;
+        int five = 0;
+        int six = 0;
+        int seven = 0;
+        int eight = 0;
+        int nine = 0;
 
     for (int row = 0; row < ROW_SIZE; row++){
+
        	for (int col = 0; col <COL_SIZE; col++ ){
 
             // Test #1: sum = 45
@@ -106,75 +105,12 @@ int validate_grid(){
 //validates columns
 int validate_col(){
 
-    // Test #1 Variable
-    int sum = 0;
-    
-    // Test #2 Variables
-  	int one = 0;
-  	int two = 0;
-  	int three = 0;
-    int four = 0;
-    int five = 0;
-    int six = 0;
-    int seven = 0;
-    int eight = 0;
-    int nine = 0;
-
-    for (int row = 0; row < ROW_SIZE; row++){
-       	for (int col = 0; col <COL_SIZE; col++ ){
-            // Test #1: sum = 45
-            sum+=sudoku_board[row][col];
-
-            // Test #2: No duplicates
-            if (sudoku_board[row][col] == 1) {
-               one = 1;
-            }
-            if (sudoku_board[row][col] == 2) {
-               two = 1;
-            }
-            if (sudoku_board[row][col] == 3) {
-               three = 1;
-            }
-            if (sudoku_board[row][col] == 4) {
-               four = 1;
-            }
-            if (sudoku_board[row][col] == 5) {
-               five = 1;
-            }
-
-            if (sudoku_board[row][col] == 6 ) {
-               six = 1;
-            }
-
-            if (sudoku_board[row][col] == 7) {
-               seven = 1;
-            }
-
-            if (sudoku_board[row][col] == 8) {
-               eight = 1;
-            }
-            if (sudoku_board[row][col] == 9) {
-               nine = 1;
-            }
-            }
-        }
-
-    if (sum != 45) {
-       return 0;
-    }
-
-    if (one*two*three*four*five*six*seven*eight*nine == 0){
-       return 0;
-    } 
-
-    return 1;
 }
 
 //validates rows
 int validate_row(){
-    for (int row = 0; row < ROW_SIZE; row++){
 
-        }
+    
 }
 
 
