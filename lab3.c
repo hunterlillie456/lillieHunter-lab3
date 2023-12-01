@@ -47,7 +47,7 @@ void* validate(void* param){
 
     
     
-    for (int i = row; i <= rowEnd; i++ ){
+    for (int i = row; i <= rowEnd; i++){
         for (int j = col; j <= colEnd; j++){
 
             int element = sudoku_board[i][j]-1;
@@ -65,8 +65,9 @@ void* validate(void* param){
         worker_validation[id] = 0;
     }
 
+    else{
     worker_validation[id] = 1;
-
+    }
 }
 
 
@@ -100,7 +101,7 @@ int is_board_valid(){
     }
 
     // cols
-    for (int col = 0; col < COL_SIZE; col += 3){
+    for (int col = 0; col < COL_SIZE; col++){
     
         parameter[num].id = num;
         parameter[num].starting_row = 0;
@@ -114,7 +115,7 @@ int is_board_valid(){
     }
 
     // rows
-    for (int row = 0; row < ROW_SIZE; row+=3){
+    for (int row = 0; row < ROW_SIZE; row++){
     
         parameter[num].id = num;
         parameter[num].starting_row = row;
@@ -128,16 +129,12 @@ int is_board_valid(){
             
     }
 
-    for (int thread = 0; thread< NUM_OF_THREADS; thread++){
-        printf("Work Thread %d \n",worker_validation[thread]);
-    
-    }
 
     for(int index = 0; index < NUM_OF_THREADS; index++){ 
         pthread_join(tid[index], NULL);
     }
 
-    for (int thread = 0; thread< NUM_OF_THREADS; thread++){
+    for (int thread = 0; thread < NUM_OF_THREADS; thread++){
         if(worker_validation[thread] != 1){
             return 0;
         }
