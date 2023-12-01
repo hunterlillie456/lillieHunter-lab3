@@ -34,84 +34,41 @@ int** read_board_from_file(char* filename){
     return board;
 }
 
-// validates grid
-int validate_grid(){
-    // Test #1 Variable
-        int sum = 0;
-    
-        // Test #2 Variables
-  	    int one = 0;
-  	    int two = 0;
-  	    int three = 0;
-        int four = 0;
-        int five = 0;
-        int six = 0;
-        int seven = 0;
-        int eight = 0;
-        int nine = 0;
+// validate function
+void* validate(void* param){
+    param_struct* p = (param_struct*) param;
 
-    for (int row = 0; row < ROW_SIZE; row++){
-
-       	for (int col = 0; col <COL_SIZE; col++ ){
-
-            // Test #1: sum = 45
-            sum+=sudoku_board[row][col];
-
-            // Test #2: No duplicates
-            if (sudoku_board[row][col] == 1) {
-               one = 1;
-            }
-            if (sudoku_board[row][col] == 2) {
-               two = 1;
-            }
-            if (sudoku_board[row][col] == 3) {
-               three = 1;
-            }
-            if (sudoku_board[row][col] == 4) {
-               four = 1;
-            }
-            if (sudoku_board[row][col] == 5) {
-               five = 1;
-            }
-
-            if (sudoku_board[row][col] == 6 ) {
-               six = 1;
-            }
-
-            if (sudoku_board[row][col] == 7) {
-               seven = 1;
-            }
-
-            if (sudoku_board[row][col] == 8) {
-               eight = 1;
-            }
-            if (sudoku_board[row][col] == 9) {
-               nine = 1;
-            }
-       	}
-    }
-
-    if (sum != 45) {
-       return 0;
-    }
-
-    if (one*two*three*four*five*six*seven*eight*nine == 0){
-       return 0;
-    } 
-
-    return 1;
-}
-
-//validates columns
-int validate_col(){
-
-}
-
-//validates rows
-int validate_row(){
+    int usedNumbers [] = {0,0,0,0,0,0,0,0,0};
+    int row = p->starting_row;
+    int rowEnd = p->ending_row;
+    int col = p->starting_col;
+    int colEnd = p->ending_col;
+    int id = p->id;
 
     
+    
+    for (int i = row; i <= rowEnd; i++ ){
+        for (int j = col; j <= colEnd; j++){
+
+            int element = sudoku_board[i][j]-1;
+            usedNumbers[element] = 1;
+
+        }
+    }
+
+    int sum = 0;
+    for (int num = 0; num < 9; num++){
+        sum+=usedNumbers[num];
+    }
+
+    if (sum =! 9){
+        worker_validation[id] = 0;
+    }
+
+    worker_validation[id] = 1;
+
 }
+
 
 
 int is_board_valid(){
@@ -127,47 +84,62 @@ int is_board_valid(){
 
     pthread_attr_init(&attr);
     
-        for (int i = 0; i < ROW_SIZE; i++){
-        for (int j = 0; j < COL_SIZE; j++)
-        {
-            
-            // Create thread for 3x3
-            if (i%3 == 0 && j%3 == 0)
-            {
-                parameter->id = num++;
-                parameter->starting_row = i;
-                parameter->starting_col = j;
-                parameter->ending_row = i+1;
-                parameter->ending_col = j+1;
+    // grids
+    for (int row = 0; row < ROW_SIZE; row += 3){
+        for (int col = 0; col < COL_SIZE; col += 3){
+            parameter[num].id = num;
+            parameter[num].starting_row = row;
+            parameter[num].starting_col = col;
+            parameter[num].ending_row = row+2;
+            parameter[num].ending_col = col+2;
 
-                pthread_create(&(tid[i]),&attr,validate_grid, &(parameter[num]));
-            }
-
-            // Create thread for cols
-            if (j == 0)
-            {
-                parameter->id = num++;
-                parameter->starting_row = i;
-                parameter->starting_col = j;
-                parameter->ending_row = i;
-                parameter->ending_col = j+1;
-                pthread_create(&(tid[i]),&attr,validate_col, &(parameter[num]));
-            }
-
-            // Create thread for rows 
-            if (i == 0)
-            {
-                parameter->id = num++;
-                parameter->starting_row = i;
-                parameter->starting_col = j;
-                parameter->ending_row = i+1;
-                parameter->ending_col = j;
-                pthread_create(&(tid[i]),&attr,validate_row, &(parameter[num]));
-            }
+            pthread_create(&(tid[num]),&attr, validate, &(parameter[num]));
+            validate(&(parameter[num]));
+            num++;
         }
     }
 
-    return 0;
+    // cols
+    for (int col = 0; col < COL_SIZE; col += 3){
+    
+        parameter[num].id = num;
+        parameter[num].starting_row = 0;
+        parameter[num].starting_col = col;
+        parameter[num].ending_row = ROW_SIZE-1;
+        parameter[num].ending_col = col;
+
+        pthread_create(&(tid[num]),&attr,validate, &(parameter[num]));
+        validate(&(parameter[num]));
+        num++;
+    }
+
+    // rows
+    for (int row = 0; row < ROW_SIZE; row+=3){
+    
+        parameter[num].id = num;
+        parameter[num].starting_row = row;
+        parameter[num].starting_col = 0;
+        parameter[num].ending_row = row;
+        parameter[num].ending_col = COL_SIZE-1;
+
+        pthread_create(&(tid[num]),&attr,validate, &(parameter[num]));
+        validate(&(parameter[num]));
+        num++;
+            
+    }
+
+    for(int index = 0; index< NUM_OF_THREADS; index++) 
+        pthread_join(tid[index], NULL);
+    
+    for (int thread = 0; thread< NUM_OF_THREADS; thread++)
+        if(worker_validation[thread] != 1)return 0;
+
+    free(worker_validation);
+    free(tid);
+    return 1;
+
+
+    
 }
 
 
