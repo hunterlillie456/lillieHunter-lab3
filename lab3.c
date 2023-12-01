@@ -61,7 +61,7 @@ void* validate(void* param){
         sum+=usedNumbers[num];
     }
 
-    if (sum =! 9){
+    if (sum != 9){
         worker_validation[id] = 0;
     }
 
@@ -128,17 +128,25 @@ int is_board_valid(){
             
     }
 
-    for(int index = 0; index< NUM_OF_THREADS; index++) 
-        pthread_join(tid[index], NULL);
+    for (int thread = 0; thread< NUM_OF_THREADS; thread++){
+        printf("Work Thread %d \n",worker_validation[thread]);
     
-    for (int thread = 0; thread< NUM_OF_THREADS; thread++)
-        if(worker_validation[thread] != 1)return 0;
+    }
+
+    for(int index = 0; index < NUM_OF_THREADS; index++){ 
+        pthread_join(tid[index], NULL);
+    }
+
+    for (int thread = 0; thread< NUM_OF_THREADS; thread++){
+        if(worker_validation[thread] != 1){
+            return 0;
+        }
+    }
 
     free(worker_validation);
     free(tid);
+
     return 1;
-
-
     
 }
 
